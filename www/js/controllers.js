@@ -49,16 +49,33 @@ angular.module('starter.controllers', [])
             return Math.min.apply(null, this);
         };
 
+        function getTimestamp(){
+            var d = new Date();
+            return d.getTime();
+        }
+
         $scope.test = false;
         $scope.map = null;
         $scope.vehicles = [];
         $scope.stops = null;
         $scope.vehicleMarkers = [];
+        $scope.vehiclesUpdateTime = null;
+        $scope.vehiclesUpdateCount = null;
+        $scope.fromLastUpdate = '-';
         var stopMarkers = null;
         loadVehicles();
         loadStops();
         getOwnPosition();
+        updateInfoBox();
 
+        function updateInfoBox(justUpdate) {
+            justUpdate = typeof justUpdate !== 'undefined' ? justUpdate : false;
+            if($scope.vehiclesUpdateTime !== null){
+                $scope.fromLastUpdate = Math.round((getTimestamp() - $scope.vehiclesUpdateTime)/1000);
+            }
+
+            setTimeout(updateInfoBox, 1000);
+        }
 
         function getOwnPosition() {
             var posOptions = {timeout: 10000, enableHighAccuracy: false};
@@ -86,7 +103,11 @@ angular.module('starter.controllers', [])
                 });
                 $scope.vehicles.unshift(jsonObj);
 
-                initMap();
+                $scope.vehiclesUpdateTime = getTimestamp();
+                $scope.vehiclesUpdateCount = jsonObj.length;
+
+
+                    initMap();
             });
         }
 
@@ -117,7 +138,7 @@ angular.module('starter.controllers', [])
                 var xArr = [];
                 var yArr = [];
                 var vehicle;
-                if(count($scope.vehicles) > 0){
+                if($scope.vehicles.length > 0){
                     for (i = 0; i <= $scope.vehicles[0].length - 1; i++) {
                         vehicle = $scope.vehicles[0][i];
 
