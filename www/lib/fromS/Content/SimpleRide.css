@@ -1,0 +1,189 @@
+.sr-item-color {
+    border-color: #F0F0F0;
+    background-color: #FFFFFF;
+}
+/*Ð³Ð¾Ð»Ð¾Ð²Ð½Ð° Ð¿Ð°Ð½ÐµÐ»ÑŒ*/
+.bar-color {
+    background-color: #462903;
+    color: white;
+}
+.sr-bar {
+    border-width: 0px;
+    padding: 0;
+    margin: 0;
+}
+/*Ð¿Ð°Ð½ÐµÐ»ÑŒ Ñ‚ÐµÐºÑÑ‚Ñƒ*/
+.sr-contentsubbar {
+    padding: 5px 5px 5px 25px;
+    margin: 0;
+    border-width: 0px;
+    text-align: center;
+}
+/*Ð¿Ð°Ð½ÐµÐ»ÑŒ Ð¿Ð¾ÑˆÑƒÐºÑƒ*/
+.sr-subbar {
+    padding: 10px;
+    margin: 0px;
+    border-width: 0px;
+}
+/*Ñ„Ð¾Ð½*/
+.sr-content {
+    border-radius: 1px;
+    margin: 0px;
+    padding: 1px;
+}
+/*ÑÑ‚Ð¸Ð»ÑŒ Ñ€ÐµÐºÐ¾Ñ€Ð´Ñ–Ð² Ð² ÑÐ¿Ð¸ÑÐºÑƒ*/
+.sr-listitem {
+    height: 50px;
+    vertical-align: central;
+    padding: 0px 0px 0px 8px;
+    margin: 2px 2px 2px 2px;
+    white-space: nowrap;
+    
+    font-family: 'Roboto', sans-serif;
+  
+    border-radius: 1px;
+    border-color: #cdcdcd;
+    border-width: 1px;
+    border-style: solid;
+    color: black;
+}
+.sr-favorite {
+    border-color: #fca638;
+    background-color: #ffdcb0;
+}
+.sr-Divider {
+    background-color: rgba(0, 0, 0, 0.53); 
+    height: 3px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+/*ÐºÐ½Ð¾Ð¿ÐºÐ¸ Ð¼ÐµÐ½ÑŽ*/
+.button.button-block, .button.button-full {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+	
+
+/*Ð¡Ñ‚Ð¸Ð»ÑŒ Ð»ÐµÐ¹Ð±Ð¸ Ð¢Ð— Ð½Ð° ÐºÐ°Ñ€Ñ‚Ñ–*/
+.maplabels {
+    color: red;
+    background-color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    width: 80px;
+    padding: 2px 2px 2px 2px;
+    border: 2px solid black;
+    white-space: pre;
+}
+
+/*Ð¡Ñ‚Ð¸Ð»ÑŒ Ð»ÐµÐ¹Ð±Ð¸ Ð—ÑƒÐ¿Ð¸Ð½ÐºÐ¸ Ð½Ð° ÐºÐ°Ñ€Ñ‚Ñ–*/
+.mapStopslabels {
+    color: black;
+    background-color: lightskyblue;
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    width: auto;
+    padding: 2px 2px 2px 2px;
+    border: 2px solid blue;
+    white-space: nowrap;
+}
+
+.sr-resultStyle {
+    font-weight: bold;
+    font-size: 22px;
+    color: #462903;
+}
+
+.col-Time {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 40px;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 40px;
+  -ms-flex: 0 0 40px;
+  flex: 0 0 40px;
+  max-width: 40px;
+  width: 8%;
+}
+.col-Icon {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 27px;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 27px;
+  -ms-flex: 0 0 27px;
+  flex: 0 0 27px;
+  max-width: 27px;
+  width: 8%;
+}
+
+.list-buttonitem {
+    overflow: hidden;
+  white-space:nowrap;
+  text-overflow: ellipsis;
+}
+.col-Button {
+    top: 5px;
+    float: left;
+    max-width: 40px;
+    width: 10%;
+}
+
+.col-Text {
+    font-family: 'Roboto', sans-serif;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 90%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 90%;
+    -ms-flex: 0 0 90%;
+    flex: 0 0 90%;
+    max-width: 90%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.col-ResultText {
+    font-family: 'Roboto', sans-serif;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 80%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 80%;
+    -ms-flex: 0 0 80%;
+    flex: 0 0 80%;
+    max-width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    float:left;
+    cursor: pointer;
+}
+.col-pointIndex {
+    float:left;
+    max-width: 40px;
+    width: 10%;
+}
+.col-pointText {
+    font-family: 'Roboto', sans-serif;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 80%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 80%;
+    -ms-flex: 0 0 80%;
+    flex: 0 0 80%;
+    max-width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+.RouteMapItem {
+    border-width: 0px 1px 4px 10px;
+}
+.RouteMapItemText {
+    font-family: 'Roboto', sans-serif;
+    overflow: visible;
+    white-space: pre-wrap;
+    text-overflow: clip;
+}
