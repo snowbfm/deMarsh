@@ -26,14 +26,18 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
+    <script src="lib/marker-animate/markerAnimate.js"></script>
+    
     <!-- your app's js -->
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
     <style>
-        #map_canvas {
-            width: 500px;
-            height: 500px;
+        .scroll-content > .scroll {
+            height: 100%;
+        }
+        .scroll-content > .scroll > iframe {
+            min-height: 100%;
         }
     </style>
 </head>

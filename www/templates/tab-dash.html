@@ -1,15 +1,12 @@
 <ion-view view-title="Dashboard">
-  <ion-content class="padding">
-
-      <div id="map_canvas"></div>
-
-      <div style="position: absolute; top: 50px; left: 10px;" id="infoBox">
-          t: {{fromLastUpdate}} <br>
-          c: {{vehiclesUpdateCount}} <br>
-      </div>
-
-
-  </ion-content>
+    <ion-content class="padding">
+            <div id="map_canvas" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;"></div>
+            <div id="infoBox" style="position: absolute; top: 50px; left: 10px; z-index: 10;">
+                t: {{fromLastUpdate}} <br>
+                c: {{vehiclesUpdateCount}} <br>
+                <button ng-click="initApp()">reload</button>
+            </div>
+    </ion-content>
 </ion-view>
 
 
