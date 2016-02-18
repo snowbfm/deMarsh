@@ -1,46 +1,57 @@
 angular.module('starter.controllers', [])
 
-    .controller('DashCtrl', function ($scope, M10factory, $cordovaGeolocation) {
-        $scope.ownX = null;
-        $scope.ownY = null;
-        $scope.ownMarkers = [];
+    .controller('DashCtrl', function ($scope, $timeout, M10factory, $cordovaGeolocation) {
 
+        var updateInfoBoxTimer = null;
+        var getOwnPositionTimer = null;
+        var loadVehiclesTimer = null;
+        var ownMarkers = [];
+        var vehicleMarkers = [];
+        var stopMarkers = [];
 
+        $scope.initApp = function(){
+            $scope.ownX = null;
+            $scope.ownY = null;
 
+            $scope.vehicles = [];
+            $scope.stops = null;
+            $scope.vehiclesUpdateTime = null;
+            $scope.vehiclesUpdateCount = null;
+            $scope.fromLastUpdate = '-';
 
-        /*        var watchOptions = {
-         timeout: 3000,
-         enableHighAccuracy: false // may cause errors if true
-         };
+            if (updateInfoBoxTimer !== null) {
+                $timeout.cancel(updateInfoBoxTimer);
+            }
+            if (updateInfoBoxTimer !== null) {
+                $timeout.cancel(updateInfoBoxTimer);
+            }
+            if (loadVehiclesTimer !== null) {
+                $timeout.cancel(loadVehiclesTimer);
+            }
 
-         var watch = $cordovaGeolocation.watchPosition(watchOptions);
-         watch.then(
-         null,
-         function (err) {
-         // error
-         },
-         function (position) {
-         var lat = position.coords.latitude;
-         var long = position.coords.longitude;
+            ownMarkers.forEach(function (o) {
+                o.setMap(null);
+            });
 
-         $scope.ownY = lat;
-         $scope.ownX = long;
-         console.log('Y: ' + $scope.ownY);
-         console.log('X: ' + $scope.ownX);
+            vehicleMarkers.forEach(function (o) {
+                o.setMap(null);
+            });
 
-         });
-         */
+            stopMarkers.forEach(function (o) {
+                o.setMap(null);
+            });
 
-        /*        watch.clearWatch();
-         // OR
-         $cordovaGeolocation.clearWatch(watch)
-         .then(function (result) {
-         // success
-         }, function (error) {
-         // error
-         });
+            ownMarkers = [];
+            vehicleMarkers = [];
+            stopMarkers = [];
 
-         */
+            loadStops();
+            loadVehicles();
+            getOwnPosition();
+            updateInfoBox();
+
+        };
+
         Array.prototype.max = function () {
             return Math.max.apply(null, this);
         };
@@ -49,32 +60,23 @@ angular.module('starter.controllers', [])
             return Math.min.apply(null, this);
         };
 
-        function getTimestamp(){
+        function getTimestamp() {
             var d = new Date();
             return d.getTime();
         }
 
-        $scope.test = false;
         $scope.map = null;
-        $scope.vehicles = [];
-        $scope.stops = null;
-        $scope.vehicleMarkers = [];
-        $scope.vehiclesUpdateTime = null;
-        $scope.vehiclesUpdateCount = null;
-        $scope.fromLastUpdate = '-';
-        var stopMarkers = null;
-        loadVehicles();
-        loadStops();
-        getOwnPosition();
-        updateInfoBox();
+        $scope.initApp();
 
-        function updateInfoBox(justUpdate) {
-            justUpdate = typeof justUpdate !== 'undefined' ? justUpdate : false;
-            if($scope.vehiclesUpdateTime !== null){
-                $scope.fromLastUpdate = Math.round((getTimestamp() - $scope.vehiclesUpdateTime)/1000);
+        function updateInfoBox() {
+            if ($scope.vehiclesUpdateTime !== null) {
+                $scope.fromLastUpdate = Math.round((getTimestamp() - $scope.vehiclesUpdateTime) / 1000);
+                console.log(Math.round((getTimestamp() - $scope.vehiclesUpdateTime) / 1000));
             }
-
-            setTimeout(updateInfoBox, 1000);
+            if (updateInfoBoxTimer !== null) {
+                $timeout.cancel(updateInfoBoxTimer);
+            }
+            updateInfoBoxTimer = $timeout(updateInfoBox, 1000);
         }
 
         function getOwnPosition() {
@@ -89,7 +91,10 @@ angular.module('starter.controllers', [])
                 }, function (err) {
                     // error
                 });
-            setTimeout(getOwnPosition, 10000);
+            if (getOwnPositionTimer !== null) {
+                $timeout.cancel(getOwnPositionTimer);
+            }
+            getOwnPositionTimer = $timeout(getOwnPosition, 10000);
         }
 
         function loadVehicles() {
@@ -104,10 +109,11 @@ angular.module('starter.controllers', [])
                 $scope.vehicles.unshift(jsonObj);
 
                 $scope.vehiclesUpdateTime = getTimestamp();
+                updateInfoBox();
                 $scope.vehiclesUpdateCount = jsonObj.length;
 
 
-                    initMap();
+                initMap();
             });
         }
 
@@ -122,6 +128,7 @@ angular.module('starter.controllers', [])
                     return ((value.X > 0) && (value.Y > 0));
                 });
                 $scope.stops = jsonObj;
+                loadVehicles();
             });
         }
 
@@ -138,7 +145,7 @@ angular.module('starter.controllers', [])
                 var xArr = [];
                 var yArr = [];
                 var vehicle;
-                if($scope.vehicles.length > 0){
+                if ($scope.vehicles.length > 0) {
                     for (i = 0; i <= $scope.vehicles[0].length - 1; i++) {
                         vehicle = $scope.vehicles[0][i];
 
@@ -160,8 +167,7 @@ angular.module('starter.controllers', [])
 
             if ($scope.stops !== null) {
                 if ($scope.map !== null) {
-                    if (stopMarkers == null) {
-                        stopMarkers = [];
+                    if (stopMarkers.length == 0) {
                         var stop;
                         for (i = 0; i <= $scope.stops.length - 1; i++) {
                             stop = $scope.stops[i];
@@ -202,11 +208,11 @@ angular.module('starter.controllers', [])
                         anchor: new google.maps.Point(12, 12)
                     };
 
-                    $scope.ownMarkers.forEach(function (o) {
+                    ownMarkers.forEach(function (o) {
                         o.setMap(null);
                     });
 
-                    $scope.ownMarkers.push(new MarkerWithLabel({
+                    ownMarkers.push(new MarkerWithLabel({
                         zIndex: 3,
                         icon: ownIcon,
                         position: new google.maps.LatLng($scope.ownY, $scope.ownX),
@@ -217,7 +223,7 @@ angular.module('starter.controllers', [])
 
             var lDirectionIcon;
             var MarkerAngle;
-            $scope.vehicleMarkers.forEach(function (o) {
+            vehicleMarkers.forEach(function (o) {
                 o.setMap(null);
             });
 
@@ -256,7 +262,7 @@ angular.module('starter.controllers', [])
                         lDirectionIcon = vehicle.CreateSimpleIcon(i);
                     }
 
-                    $scope.vehicleMarkers.push(new MarkerWithLabel({
+                    vehicleMarkers.push(new MarkerWithLabel({
                         zIndex: 3,
                         icon: lDirectionIcon,
                         position: new google.maps.LatLng(vehicle.Y, vehicle.X),
@@ -265,7 +271,12 @@ angular.module('starter.controllers', [])
 
                 }
             }
-            setTimeout(loadVehicles, 10000);
+
+            if (loadVehiclesTimer !== null) {
+                $timeout.cancel(loadVehiclesTimer);
+            }
+            loadVehiclesTimer = $timeout(loadVehicles, 10000);
+
         }
     })
 
