@@ -1,9 +1,13 @@
 angular.module('starter.controllers', [])
 
-    .controller('DashCtrl', function ($scope, $timeout, M10factory, $cordovaGeolocation) {
+    .controller('DashCtrl', function ($scope, $timeout, M10factory, $cordovaGeolocation, CodesFactory) {
 
         var maxVehicleRecords = 10;
         var timeoutInterval = 5000;
+
+        var codeSelected = CodesFactory.getCode();
+
+        console.log("*" + codeSelected + "*");
 
         var updateInfoBoxTimer = null;
         var getOwnPositionTimer = null;
@@ -80,11 +84,21 @@ angular.module('starter.controllers', [])
         $scope.initApp();
 
         function updateInfoBox() {
-            if (vehiclesUpdateTime !== null) {
-                $scope.fromLastUpdate = Math.round(((new Date()).getTime() - vehiclesUpdateTime) / 1000);
-            }
             if (updateInfoBoxTimer !== null) {
                 $timeout.cancel(updateInfoBoxTimer);
+            }
+
+            var code = CodesFactory.getCode();
+            console.log("!" + code + "!");
+            if (code !== codeSelected) {
+                codeSelected = code;
+
+                $scope.initApp();
+                return false;
+            }
+
+            if (vehiclesUpdateTime !== null) {
+                $scope.fromLastUpdate = Math.round(((new Date()).getTime() - vehiclesUpdateTime) / 1000);
             }
             updateInfoBoxTimer = $timeout(updateInfoBox, 1000);
         }
@@ -142,7 +156,7 @@ angular.module('starter.controllers', [])
         }
 
         function loadVehicles() {
-            M10factory.getVehicles().success(function (data) {
+            M10factory.getVehicles(codeSelected).success(function (data) {
                 var jsonText = data;
                 jsonText = jsonText.replace(/\\(.)/g, "$1");
                 jsonText = jsonText.substr(1, jsonText.length - 2);
@@ -165,8 +179,7 @@ angular.module('starter.controllers', [])
         }
 
         function loadStops() {
-            M10factory.getStops().success(function (data) {
-
+            M10factory.getStops(codeSelected).success(function (data) {
                 var jsonText = data;
                 jsonText = jsonText.replace(/\\(.)/g, "$1");
                 jsonText = jsonText.substr(1, jsonText.length - 2);
@@ -291,7 +304,6 @@ angular.module('starter.controllers', [])
                     }
 
 
-
                 }
             }
 
@@ -340,7 +352,7 @@ angular.module('starter.controllers', [])
         };
     })
 
-    .controller('SettingsCtrl', function ($scope, $state, RoutesService, $ionicScrollDelegate) {
+    .controller('SettingsCtrl', function ($scope, $state, RoutesService, $ionicScrollDelegate, CodesFactory) {
         $scope.AppCaption = AppCaption;
         $scope.Routes = [{Name: "Завантаження..."}];
 
@@ -377,6 +389,8 @@ angular.module('starter.controllers', [])
             for (var i = 0; i < $scope.jsonObj.length; i++) {
                 if ($scope.jsonObj[i].checkBus == true) {
                     console.log($scope.jsonObj[i]);
+                    CodesFactory.setCode($scope.jsonObj[i].Code);
+                    break;
                 }
             }
         };

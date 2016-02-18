@@ -49,17 +49,14 @@ angular.module('starter.services', [])
         };
     })
     .factory('M10factory', function ($http) {
-        var factory = [];
+        var factory = {};
 
-        factory.getVehicles = function () {
-            return $http.get("http://cors.io/?u=http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/RouteMonitoring/?code=C2|712985");
-            //return $http.get("http://cors.io/?u=http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/RouteMonitoring/?code=C2|994328");
+        factory.getVehicles = function (code) {
+            return $http.get("http://cors.io/?u=http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/RouteMonitoring/?code=" + code);
         };
 
-        factory.getStops = function () {
-            return $http.get("http://cors.io/?u=http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/CompositeRoute/?code=C2|712985");
-            //return $http.get("http://cors.io/?u=http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/CompositeRoute/?code=C2|994328");
-
+        factory.getStops = function (code) {
+            return $http.get("http://cors.io/?u=http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/CompositeRoute/?code=" + code);
         };
 
         return factory;
@@ -97,5 +94,21 @@ angular.module('starter.services', [])
             return request.then(receiveResult, reciveFail);
         };
         return lService;
-    }
-);
+    })
+    .factory('CodesFactory', function () {
+        var factory = {};
+        var codeSelected = "";
+
+        factory.setCode = function (code) {
+            codeSelected = code;
+        };
+
+        factory.getCode = function () {
+            if(codeSelected == ""){
+                return "C2|712985";
+            }
+            return codeSelected;
+        };
+
+        return factory;
+    });
