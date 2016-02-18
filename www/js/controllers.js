@@ -6,8 +6,6 @@ angular.module('starter.controllers', [])
         $scope.ownMarkers = [];
 
 
-
-
         /*        var watchOptions = {
          timeout: 3000,
          enableHighAccuracy: false // may cause errors if true
@@ -49,7 +47,7 @@ angular.module('starter.controllers', [])
             return Math.min.apply(null, this);
         };
 
-        function getTimestamp(){
+        function getTimestamp() {
             var d = new Date();
             return d.getTime();
         }
@@ -70,8 +68,8 @@ angular.module('starter.controllers', [])
 
         function updateInfoBox(justUpdate) {
             justUpdate = typeof justUpdate !== 'undefined' ? justUpdate : false;
-            if($scope.vehiclesUpdateTime !== null){
-                $scope.fromLastUpdate = Math.round((getTimestamp() - $scope.vehiclesUpdateTime)/1000);
+            if ($scope.vehiclesUpdateTime !== null) {
+                $scope.fromLastUpdate = Math.round((getTimestamp() - $scope.vehiclesUpdateTime) / 1000);
             }
 
             setTimeout(updateInfoBox, 1000);
@@ -107,7 +105,7 @@ angular.module('starter.controllers', [])
                 $scope.vehiclesUpdateCount = jsonObj.length;
 
 
-                    initMap();
+                initMap();
             });
         }
 
@@ -138,7 +136,7 @@ angular.module('starter.controllers', [])
                 var xArr = [];
                 var yArr = [];
                 var vehicle;
-                if($scope.vehicles.length > 0){
+                if ($scope.vehicles.length > 0) {
                     for (i = 0; i <= $scope.vehicles[0].length - 1; i++) {
                         vehicle = $scope.vehicles[0][i];
 
@@ -288,8 +286,44 @@ angular.module('starter.controllers', [])
         $scope.chat = Chats.get($stateParams.chatId);
     })
 
-    .controller('AccountCtrl', function ($scope) {
-        $scope.settings = {
-            enableFriends: true
+    .controller('SettingsCtrl', function ($scope, $state, RoutesService, $ionicScrollDelegate) {
+        $scope.AppCaption = AppCaption;
+        $scope.Routes = [{Name: "Завантаження..."}];
+
+        $scope.ResetScroll = function () {
+            $ionicScrollDelegate.scrollTop();
+        };
+        $scope.ShowRoutePoints = function (route) {
+            $state.go('app.routepoints', {'Id': route.Id, 'Code': route.Code, 'Name': route.Name});
+        };
+
+        RoutesService.GetRoutes(
+            function (response) {
+                var jsonText = response.data;
+                var busArr = [];
+                jsonText = jsonText.replace(/\\(.)/g, "$1");
+                jsonText = jsonText.substr(1, jsonText.length - 2);
+                $scope.jsonObj = JSON.parse(jsonText);
+                if (!$scope.$$phase)
+                    $scope.$apply();
+
+                /*
+                 busArr= $scope.jsonObj[0].checkBus;
+                 console.log(busArr);
+                 */
+            },
+            function (fail) {
+                $scope.Routes = [{Name: fail.statusText}];
+                if (!$scope.$$phase)
+                    $scope.$apply();
+            }
+        );
+
+        $scope.setBusRoute = function () {
+            for (var i = 0; i < $scope.jsonObj.length; i++) {
+                if ($scope.jsonObj[i].checkBus == true) {
+                    console.log($scope.jsonObj[i]);
+                }
+            }
         };
     });

@@ -63,4 +63,39 @@ angular.module('starter.services', [])
         };
 
         return factory;
-    });
+    })
+
+    .factory("RoutesService", function ($http) {
+        AppCaption = "Маршрутні автобуси";
+        WebApiStr = "http://cors.io/?u=http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/";
+        var lService = {};
+
+        lService.GetRoutePoints = function (routeCode, receiveResult, reciveFail) {
+            var request = $http({
+                method: 'GET',
+                url: WebApiStr + "CompositeRoute/?code=" + routeCode,
+                cache: true
+            });
+            return request.then(receiveResult, reciveFail);
+        };
+
+        lService.GetRouteCirclePath = function (routeCode, receiveResult, reciveFail) {
+            var request = $http({
+                method: 'GET',
+                url: WebApiStr + "path/?code=" + routeCode,
+                cache: true
+            });
+            return request.then(receiveResult, reciveFail);
+        };
+
+        lService.GetRoutes = function (receiveResult, reciveFail) {
+            var request = $http({
+                method: 'GET',
+                url: WebApiStr + "CompositeRoute/",
+                cache: true
+            });
+            return request.then(receiveResult, reciveFail);
+        };
+        return lService;
+    }
+);
