@@ -1,8 +1,11 @@
 angular.module('starter.controllers', [])
 
-    .controller('DashCtrl', function ($scope, $timeout, RouteDataFactory, $cordovaGeolocation, CodesFactory) {
+    .controller('DashCtrl', function ($scope, $timeout, RoutesService, $cordovaGeolocation, CodesFactory) {
 
-        console.log('ok3');
+        $scope.$on('$ionicView.enter', function(e) {
+            loadVehicles();
+        });
+
         var maxVehicleRecords = 10;
         var timeoutInterval = 5000;
 
@@ -26,7 +29,10 @@ angular.module('starter.controllers', [])
 
         var map = null;
 
+        $scope.errorMsg = '';
+
         $scope.initApp = function () {
+            $scope.errorMsg = '';
             ownX = null;
             ownY = null;
 
@@ -65,7 +71,7 @@ angular.module('starter.controllers', [])
             stopMarkers = [];
 
             loadStops();
-            loadVehicles();
+            //loadVehicles();
             getOwnPosition();
             updateInfoBox();
 
@@ -85,14 +91,6 @@ angular.module('starter.controllers', [])
         function updateInfoBox() {
             if (updateInfoBoxTimer !== null) {
                 $timeout.cancel(updateInfoBoxTimer);
-            }
-
-            var code = CodesFactory.getCode();
-            if (code !== codeSelected) {
-                codeSelected = code;
-
-                $scope.initApp();
-                return false;
             }
 
             if (vehiclesUpdateTime !== null) {
@@ -154,40 +152,62 @@ angular.module('starter.controllers', [])
         }
 
         function loadVehicles() {
-            RouteDataFactory.getVehicles(codeSelected).success(function (data) {
-                var jsonText = data;
-                jsonText = jsonText.replace(/\\(.)/g, "$1");
-                jsonText = jsonText.substr(1, jsonText.length - 2);
-                var jsonObj = JSON.parse(jsonText);
-                jsonObj = jsonObj.filter(function (value) {
-                    return ((value.X > 0) && (value.Y > 0));
-                });
+            var code = CodesFactory.getCode();
+            if (code !== codeSelected) {
+                codeSelected = code;
 
-                jsonObj = initIcons(jsonObj);
+                $scope.initApp();
+                return false;
+            }
 
-                vehicles.unshift(jsonObj);
+            RoutesService.GetGPSRouteInfo(
+                codeSelected,
+                function (response) {
+                    var jsonText = response.data;
+                    jsonText = jsonText.replace(/\\(.)/g, "$1");
+                    jsonText = jsonText.substr(1, jsonText.length - 2);
+                    var jsonObj = JSON.parse(jsonText);
+                    jsonObj = jsonObj.filter(function (value) {
+                        return ((value.X > 0) && (value.Y > 0));
+                    });
 
-                vehiclesUpdateTime = (new Date()).getTime();
-                updateInfoBox();
-                $scope.vehiclesUpdateCount = jsonObj.length;
+                    jsonObj = initIcons(jsonObj);
+
+                    vehicles.unshift(jsonObj);
+
+                    vehiclesUpdateTime = (new Date()).getTime();
+                    updateInfoBox();
+                    $scope.vehiclesUpdateCount = jsonObj.length;
 
 
-                initMap();
-            });
+                    initMap();
+
+                },
+                function (fail) {
+                    $scope.errorMsg = fail.statusText;
+                }
+            );
+
         }
 
         function loadStops() {
-            RouteDataFactory.getStops(codeSelected).success(function (data) {
-                var jsonText = data;
-                jsonText = jsonText.replace(/\\(.)/g, "$1");
-                jsonText = jsonText.substr(1, jsonText.length - 2);
-                var jsonObj = JSON.parse(jsonText);
-                jsonObj = jsonObj.filter(function (value) {
-                    return ((value.X > 0) && (value.Y > 0));
-                });
-                stops = jsonObj;
-                loadVehicles();
-            });
+            RoutesService.GetRoutePoints(
+                codeSelected,
+                function (response) {
+                    var jsonText = response.data;
+                    jsonText = jsonText.replace(/\\(.)/g, "$1");
+                    jsonText = jsonText.substr(1, jsonText.length - 2);
+                    var jsonObj = JSON.parse(jsonText);
+                    jsonObj = jsonObj.filter(function (value) {
+                        return ((value.X > 0) && (value.Y > 0));
+                    });
+                    stops = jsonObj;
+                    loadVehicles();
+                },
+                function (fail) {
+                    $scope.errorMsg = fail.statusText;
+                }
+            );
         }
 
         function initMap() {
@@ -332,20 +352,10 @@ angular.module('starter.controllers', [])
         //
         //$scope.$on('$ionicView.enter', function(e) {
         //});
-        console.log('ok2');
     })
 
     .controller('SettingsCtrl', function ($scope, $state, RoutesService, $ionicScrollDelegate, CodesFactory) {
-        console.log('ok1');
-        $scope.AppCaption = AppCaption;
-        $scope.Routes = [{Name: "Завантаження..."}];
-
-        $scope.ResetScroll = function () {
-            $ionicScrollDelegate.scrollTop();
-        };
-        $scope.ShowRoutePoints = function (route) {
-            $state.go('app.routepoints', {'Id': route.Id, 'Code': route.Code, 'Name': route.Name});
-        };
+        $scope.routes = [{Name: "Завантаження..."}];
 
         RoutesService.GetRoutes(
             function (response) {
@@ -353,29 +363,14 @@ angular.module('starter.controllers', [])
                 var busArr = [];
                 jsonText = jsonText.replace(/\\(.)/g, "$1");
                 jsonText = jsonText.substr(1, jsonText.length - 2);
-                $scope.jsonObj = JSON.parse(jsonText);
-                if (!$scope.$$phase)
-                    $scope.$apply();
-
-                /*
-                 busArr= $scope.jsonObj[0].checkBus;
-                 console.log(busArr);
-                 */
+                $scope.routes = JSON.parse(jsonText);
             },
             function (fail) {
-                $scope.Routes = [{Name: fail.statusText}];
-                if (!$scope.$$phase)
-                    $scope.$apply();
+                $scope.routes = [{Name: fail.statusText}];
             }
         );
 
-        $scope.setBusRoute = function () {
-            for (var i = 0; i < $scope.jsonObj.length; i++) {
-                if ($scope.jsonObj[i].checkBus == true) {
-                    console.log($scope.jsonObj[i]);
-                    CodesFactory.setCode($scope.jsonObj[i].Code);
-                    break;
-                }
-            }
+        $scope.setBusRoute = function (code) {
+            CodesFactory.setCode(code);
         };
     });

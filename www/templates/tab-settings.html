@@ -1,24 +1,26 @@
-<ion-view view-title="{{AppCaption}}">
-  <ion-content>
-      <div class="bar bar-header item-input-inset">
-          <label class="item-input-wrapper">
-              <i class="icon ion-ios-search placeholder-icon"></i>
-              <input type="search" placeholder="Пошук" ng-model="searchText" name="searchText">
-          </label>
-          <button class="button button-clear">
-              Cancel
-          </button>
-      </div>
+<ion-view view-title="Settings">
+    <ion-content>
+        <div class="bar bar-header item-input-inset">
+            <label class="item-input-wrapper">
+                <i class="icon ion-ios-search placeholder-icon"></i>
+                <input type="search" placeholder="Пошук" ng-model="searchText" name="searchText">
+            </label>
+        </div>
 
-    <ion-list>
-        <div ng-repeat="(key, value) in jsonObj | filter:searchText">
-            <ion-checkbox ng-change="setBusRoute()" ng-model="jsonObj[key].checkBus">{{value.Name}}</ion-checkbox>
-        </div>
-        <!--
-        <div ng-repeat="(key, value) in jsonObj | filter:searchText">
-            <ion-checkbox ng-model="jsonObj[key].checkBus" value="{{value.Code}}">{{value.Name}}</ion-checkbox>
-        </div>
-        -->
-    </ion-list>
-  </ion-content>
+        <ion-list>
+            <ion-item ng-repeat="(key, value) in routes | filter:searchText as results">
+                <ion-radio ng-if="value.Code" ng-value="value.Code" ng-change="setBusRoute(value.Code)" ng-model="routes[key].selectedRoute">
+                    {{value.Name}}
+                </ion-radio>
+                <strong ng-if="!value.Code">
+                    {{value.Name}}
+                </strong>
+            </ion-item>
+
+            <ion-item ng-if="results.length == 0">
+                <strong>Пусто...</strong>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
 </ion-view>
