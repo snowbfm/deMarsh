@@ -2,12 +2,11 @@ angular.module('starter.controllers', [])
 
     .controller('DashCtrl', function ($scope, $timeout, M10factory, $cordovaGeolocation, CodesFactory) {
 
+        console.log('ok3');
         var maxVehicleRecords = 10;
         var timeoutInterval = 5000;
 
         var codeSelected = CodesFactory.getCode();
-
-        console.log("*" + codeSelected + "*");
 
         var updateInfoBoxTimer = null;
         var getOwnPositionTimer = null;
@@ -89,7 +88,6 @@ angular.module('starter.controllers', [])
             }
 
             var code = CodesFactory.getCode();
-            console.log("!" + code + "!");
             if (code !== codeSelected) {
                 codeSelected = code;
 
@@ -327,7 +325,7 @@ angular.module('starter.controllers', [])
         }
     })
 
-    .controller('ChatsCtrl', function ($scope, Chats) {
+    .controller('ContactCtrl', function ($scope) {
         // With the new view caching in Ionic, Controllers are only called
         // when they are recreated or on app start, instead of every page change.
         // To listen for when this page is active (for example, to refresh data),
@@ -335,24 +333,11 @@ angular.module('starter.controllers', [])
         //
         //$scope.$on('$ionicView.enter', function(e) {
         //});
-
-        $scope.chats = Chats.all();
-        $scope.remove = function (chat) {
-            Chats.remove(chat);
-        };
-    })
-
-    .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
-        $scope.chat = Chats.get($stateParams.chatId);
-    })
-
-    .controller('AccountCtrl', function ($scope) {
-        $scope.settings = {
-            enableFriends: true
-        };
+        console.log('ok2');
     })
 
     .controller('SettingsCtrl', function ($scope, $state, RoutesService, $ionicScrollDelegate, CodesFactory) {
+        console.log('ok1');
         $scope.AppCaption = AppCaption;
         $scope.Routes = [{Name: "Завантаження..."}];
 
