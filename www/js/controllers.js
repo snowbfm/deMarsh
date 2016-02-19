@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-    .controller('DashCtrl', function ($scope, $timeout, M10factory, $cordovaGeolocation, CodesFactory) {
+    .controller('DashCtrl', function ($scope, $timeout, RouteDataFactory, $cordovaGeolocation, CodesFactory) {
 
         console.log('ok3');
         var maxVehicleRecords = 10;
@@ -154,7 +154,7 @@ angular.module('starter.controllers', [])
         }
 
         function loadVehicles() {
-            M10factory.getVehicles(codeSelected).success(function (data) {
+            RouteDataFactory.getVehicles(codeSelected).success(function (data) {
                 var jsonText = data;
                 jsonText = jsonText.replace(/\\(.)/g, "$1");
                 jsonText = jsonText.substr(1, jsonText.length - 2);
@@ -177,7 +177,7 @@ angular.module('starter.controllers', [])
         }
 
         function loadStops() {
-            M10factory.getStops(codeSelected).success(function (data) {
+            RouteDataFactory.getStops(codeSelected).success(function (data) {
                 var jsonText = data;
                 jsonText = jsonText.replace(/\\(.)/g, "$1");
                 jsonText = jsonText.substr(1, jsonText.length - 2);
@@ -189,7 +189,6 @@ angular.module('starter.controllers', [])
                 loadVehicles();
             });
         }
-
 
         function initMap() {
             var i, j;

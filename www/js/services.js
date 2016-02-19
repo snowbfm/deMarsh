@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 
-    .factory('M10factory', function ($http) {
+    .factory('RouteDataFactory', function ($http) {
         var factory = {};
 
         factory.getVehicles = function (code) {
