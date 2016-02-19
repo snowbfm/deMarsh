@@ -4,7 +4,7 @@
             <div id="infoBox" style="position: absolute; top: 50px; left: 10px; z-index: 10;">
                 t: {{fromLastUpdate}} <br>
                 c: {{vehiclesUpdateCount}} <br>
-                <div ng-if="errorMsg">errorMsg</div>
+                <div ng-if="errorMsg">{{errorMsg}}</div>
                 <button ng-click="initApp()">reload</button>
             </div>
     </ion-content>
