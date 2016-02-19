@@ -75,6 +75,10 @@ angular.module('starter.controllers', [])
             getOwnPosition();
             updateInfoBox();
 
+            if (map != null) {
+                google.maps.event.trigger(map, 'resize');
+            }
+
         };
 
         Array.prototype.max = function () {
