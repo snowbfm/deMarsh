@@ -1,11 +1,11 @@
 <ion-view view-title="Dashboard">
     <ion-content class="padding">
             <div id="map_canvas" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;"></div>
-            <div id="infoBox" style="position: absolute; top: 50px; left: 10px; z-index: 10;">
+            <div id="infoBox" style="position: absolute; top: 55px; left: 10px; z-index: 10;">
                 t: {{fromLastUpdate}} <br>
                 c: {{vehiclesUpdateCount}} <br>
-                <div ng-if="errorMsg">{{errorMsg}}</div>
                 <button ng-click="initApp()">reload</button>
+                <div ng-if="errorMsg">{{errorMsg}}</div>
             </div>
     </ion-content>
 </ion-view>

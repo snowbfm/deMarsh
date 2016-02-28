@@ -3,7 +3,7 @@ angular.module('starter.controllers', [])
     .controller('DashCtrl', function ($scope, $timeout, RoutesService, $cordovaGeolocation, CodesFactory) {
 
         $scope.$on('$ionicView.enter', function(e) {
-            loadVehicles();
+            $scope.initApp();
         });
 
         var maxVehicleRecords = 10;
@@ -185,9 +185,17 @@ angular.module('starter.controllers', [])
                 },
                 function (fail) {
                     $scope.errorMsg = fail.statusText;
+                    if($scope.errorMsg == ''){
+                        $scope.errorMsg = 'get data error';
+                    }
+
+                    vehiclesUpdateTime = (new Date()).getTime();
+                    updateInfoBox();
+                    $scope.vehiclesUpdateCount = '-';
+
+                    initMap();
                 }
             );
-
         }
 
         function loadStops() {
@@ -204,6 +212,10 @@ angular.module('starter.controllers', [])
                 },
                 function (fail) {
                     $scope.errorMsg = fail.statusText;
+                    if($scope.errorMsg == ''){
+                        $scope.errorMsg = 'get data error';
+                    }
+                    loadVehicles();
                 }
             );
         }
@@ -223,7 +235,17 @@ angular.module('starter.controllers', [])
                     }
                 }
 
-                var myLatlng = new google.maps.LatLng((yArr.min() + yArr.max()) / 2, (xArr.min() + xArr.max()) / 2);
+                var latLngX = (xArr.min() + xArr.max()) / 2;
+                var latLngY = (yArr.min() + yArr.max()) / 2;
+
+                if((isNaN(latLngX))||(isNaN(latLngY))){
+                    //Lviv
+                    latLngX = 24.029717;
+                    latLngY = 49.839683;
+                }
+
+                console.log(latLngY + ' ' + latLngX);
+                var myLatlng = new google.maps.LatLng(latLngY, latLngX);
                 var myOptions = {
                     zoom: 12,
                     center: myLatlng,
@@ -261,11 +283,12 @@ angular.module('starter.controllers', [])
                         }
                     }
                 }
-
             }
 
+            console.log(ownX);
+            console.log(ownY);
 
-            if ((ownY !== null) && (ownX !== null)) {
+            if ((ownY !== null) && (ownY !== null)) {
                 if (map !== null) {
                     var ownIcon = {
                         path: 'm25.312174,23.704433c-1.133963,-2.048929 -2.522187,-3.708115 -3.914122,-4.868061c-1.623924,1.189641 -3.602328,1.913447 -5.7589,1.913447c-2.160283,0 -4.140543,-0.725662 -5.762612,-1.913447c-1.391935,1.159946 -2.780159,2.819133 -3.917834,4.868061c-2.639109,4.756707 -2.928632,9.635904 -0.64957,10.901637c1.020752,0.569765 2.091615,0.144761 3.197739,-0.920533c-0.194871,1.080142 -0.308082,2.251223 -0.308082,3.476126c0,5.441539 2.113886,9.849334 4.719588,9.849334c1.570103,0 2.347731,-1.605365 2.720769,-4.062595c0.373039,2.45723 1.150666,4.062595 2.715202,4.062595c2.609415,0 4.7233,-4.407795 4.7233,-9.849334c0,-1.224903 -0.113211,-2.395984 -0.311793,-3.476126c1.109836,1.065294 2.178843,1.490299 3.201451,0.920533c2.279062,-1.265733 1.983972,-6.14493 -0.655138,-10.901637zm-9.674878,-4.810528c4.383668,0 7.939599,-3.555931 7.939599,-7.941454s-3.555931,-7.941454 -7.939599,-7.941454c-4.385524,0 -7.94331,3.555931 -7.94331,7.941454s3.557786,7.941454 7.94331,7.941454z',
