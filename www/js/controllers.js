@@ -89,7 +89,6 @@ angular.module('starter.controllers', [])
             return Math.min.apply(null, this);
         };
 
-
         $scope.initApp();
 
         function updateInfoBox() {
@@ -168,8 +167,6 @@ angular.module('starter.controllers', [])
                 codeSelected,
                 function (response) {
                     var jsonText = response.data;
-                    jsonText = jsonText.replace(/\\(.)/g, "$1");
-                    jsonText = jsonText.substr(1, jsonText.length - 2);
                     var jsonObj = JSON.parse(jsonText);
                     jsonObj = jsonObj.filter(function (value) {
                         return ((value.X > 0) && (value.Y > 0));
@@ -182,7 +179,6 @@ angular.module('starter.controllers', [])
                     vehiclesUpdateTime = (new Date()).getTime();
                     updateInfoBox();
                     $scope.vehiclesUpdateCount = jsonObj.length;
-
 
                     initMap();
 
@@ -199,8 +195,6 @@ angular.module('starter.controllers', [])
                 codeSelected,
                 function (response) {
                     var jsonText = response.data;
-                    jsonText = jsonText.replace(/\\(.)/g, "$1");
-                    jsonText = jsonText.substr(1, jsonText.length - 2);
                     var jsonObj = JSON.parse(jsonText);
                     jsonObj = jsonObj.filter(function (value) {
                         return ((value.X > 0) && (value.Y > 0));
@@ -365,8 +359,6 @@ angular.module('starter.controllers', [])
             function (response) {
                 var jsonText = response.data;
                 var busArr = [];
-                jsonText = jsonText.replace(/\\(.)/g, "$1");
-                jsonText = jsonText.substr(1, jsonText.length - 2);
                 $scope.routes = JSON.parse(jsonText);
             },
             function (fail) {

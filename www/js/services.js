@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
 
     .factory("RoutesService", function ($http) {
-        var webApiStr = "http://cors.io/?u=http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/";
+        var webApiStr = "http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/";
         var lService = {};
 
         lService.GetRoutePoints = function (routeCode, receiveResult, reciveFail) {
